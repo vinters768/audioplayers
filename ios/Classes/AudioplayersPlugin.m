@@ -162,8 +162,10 @@ FlutterMethodChannel *_channel_audioplayer;
   AVPlayerItem *playerItem;
     
   NSLog(@"setUrl %@", url);
-
-  if (!playerInfo || ![url isEqualToString:playerInfo[@"url"]]) {
+//kv @ 20.06.2019 commented this out, should add some kind of force reload otherwise
+//assets with same name not played \(O_o)_
+    
+//  if (!playerInfo || ![url isEqualToString:playerInfo[@"url"]]) {
     if (isLocal) {
       playerItem = [ [ AVPlayerItem alloc ] initWithURL:[ NSURL fileURLWithPath:url ]];
     } else {
@@ -214,11 +216,11 @@ FlutterMethodChannel *_channel_audioplayer;
                           options:0
                           context:(void*)playerId];
       
-  } else {
-    if ([[player currentItem] status ] == AVPlayerItemStatusReadyToPlay) {
-      onReady(playerId);
-    }
-  }
+//  } else {
+//    if ([[player currentItem] status ] == AVPlayerItemStatusReadyToPlay) {
+//      onReady(playerId);
+//    }
+//  }
 }
 
 -(void) play: (NSString*) playerId
