@@ -17,7 +17,7 @@ static NSMutableDictionary * players;
 @end
 
 @implementation AudioplayersPlugin {
-  FlutterResult _result;
+    FlutterResult _result;
 }
 
 typedef void (^VoidCallback)(NSString * playerId);
@@ -26,181 +26,181 @@ NSMutableSet *timeobservers;
 FlutterMethodChannel *_channel_audioplayer;
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  FlutterMethodChannel* channel = [FlutterMethodChannel
-                                   methodChannelWithName:CHANNEL_NAME
-                                   binaryMessenger:[registrar messenger]];
-  AudioplayersPlugin* instance = [[AudioplayersPlugin alloc] init];
-  [registrar addMethodCallDelegate:instance channel:channel];
-  _channel_audioplayer = channel;
+    FlutterMethodChannel* channel = [FlutterMethodChannel
+                                     methodChannelWithName:CHANNEL_NAME
+                                     binaryMessenger:[registrar messenger]];
+    AudioplayersPlugin* instance = [[AudioplayersPlugin alloc] init];
+    [registrar addMethodCallDelegate:instance channel:channel];
+    _channel_audioplayer = channel;
 }
 
 - (id)init {
-  self = [super init];
-  if (self) {
-      players = [[NSMutableDictionary alloc] init];
-  }
-  return self;
+    self = [super init];
+    if (self) {
+        players = [[NSMutableDictionary alloc] init];
+    }
+    return self;
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-  NSString * playerId = call.arguments[@"playerId"];
-  NSLog(@"iOS => call %@, playerId %@", call.method, playerId);
-
-  typedef void (^CaseBlock)(void);
-
-  // Squint and this looks like a proper switch!
-  NSDictionary *methods = @{
-                @"play":
-                  ^{
-                    NSLog(@"play!");
-                    NSString *url = call.arguments[@"url"];
-                    if (url == nil)
-                        result(0);
-                    if (call.arguments[@"isLocal"] == nil)
-                        result(0);
-                    if (call.arguments[@"volume"] == nil)
-                        result(0);
-                    if (call.arguments[@"position"] == nil)
-                        result(0);
-                    if (call.arguments[@"respectSilence"] == nil)
-                        result(0);
-                    int isLocal = [call.arguments[@"isLocal"]intValue] ;
-                    float volume = (float)[call.arguments[@"volume"] doubleValue] ;
-                    int milliseconds = call.arguments[@"position"] == [NSNull null] ? 0.0 : [call.arguments[@"position"] intValue] ;
-                    bool respectSilence = [call.arguments[@"respectSilence"]boolValue] ;
-                    CMTime time = CMTimeMakeWithSeconds(milliseconds / 1000,NSEC_PER_SEC);
-                    NSLog(@"isLocal: %d %@", isLocal, call.arguments[@"isLocal"] );
-                    NSLog(@"volume: %f %@", volume, call.arguments[@"volume"] );
-                    NSLog(@"position: %f %@", milliseconds, call.arguments[@"positions"] );
-                    [self play:playerId url:url isLocal:isLocal volume:volume time:time isNotification:respectSilence];
-                  },
-                @"pause":
-                  ^{
-                    NSLog(@"pause");
-                    [self pause:playerId];
-                  },
-                @"resume":
-                  ^{
-                    NSLog(@"resume");
-                    [self resume:playerId];
-                  },
-                @"stop":
-                  ^{
-                    NSLog(@"stop");
-                    [self stop:playerId];
-                  },
-                @"release":
-                    ^{
-                        NSLog(@"release");
-                        [self stop:playerId];
-                    },
-                @"seek":
-                  ^{
-                    NSLog(@"seek");
-                    if (!call.arguments[@"position"]) {
-                      result(0);
-                    } else {
-                      int milliseconds = [call.arguments[@"position"] intValue];
-                      NSLog(@"Seeking to: %f milliseconds", milliseconds);
-                      [self seek:playerId time:CMTimeMakeWithSeconds(milliseconds / 1000,NSEC_PER_SEC)];
-                    }
-                  },
-                @"setUrl":
-                  ^{
-                    NSLog(@"setUrl");
-                    NSString *url = call.arguments[@"url"];
-                    int isLocal = [call.arguments[@"isLocal"]intValue];
-                    [ self setUrl:url
-                          isLocal:isLocal
-                          playerId:playerId
-                          onReady:^(NSString * playerId) {
-                            result(@(1));
-                          }
-                    ];
-                  },
-                @"setVolume":
-                  ^{
-                    NSLog(@"setVolume");
-                    float volume = (float)[call.arguments[@"volume"] doubleValue];
-                    [self setVolume:volume playerId:playerId];
-                  },
-                @"setReleaseMode":
-                  ^{
-                    NSLog(@"setReleaseMode");
-                    NSString *releaseMode = call.arguments[@"releaseMode"];
-                    bool looping = [releaseMode hasSuffix:@"LOOP"];
-                    [self setLooping:looping playerId:playerId];
-                  }
-                };
-
-  [ self initPlayerInfo:playerId ];
-  CaseBlock c = methods[call.method];
-  if (c) c(); else {
-    NSLog(@"not implemented");
-    result(FlutterMethodNotImplemented);
-  }
-  if(![call.method isEqualToString:@"setUrl"]) {
-    result(@(1));
-  }
+    NSString * playerId = call.arguments[@"playerId"];
+    //  NSLog(@"iOS => call %@, playerId %@", call.method, playerId);
+    
+    typedef void (^CaseBlock)(void);
+    
+    // Squint and this looks like a proper switch!
+    NSDictionary *methods = @{
+                              @"play":
+                                  ^{
+                                      //                    NSLog(@"play!");
+                                      NSString *url = call.arguments[@"url"];
+                                      if (url == nil)
+                                          result(0);
+                                      if (call.arguments[@"isLocal"] == nil)
+                                          result(0);
+                                      if (call.arguments[@"volume"] == nil)
+                                          result(0);
+                                      if (call.arguments[@"position"] == nil)
+                                          result(0);
+                                      if (call.arguments[@"respectSilence"] == nil)
+                                          result(0);
+                                      int isLocal = [call.arguments[@"isLocal"]intValue] ;
+                                      float volume = (float)[call.arguments[@"volume"] doubleValue] ;
+                                      int milliseconds = call.arguments[@"position"] == [NSNull null] ? 0.0 : [call.arguments[@"position"] intValue] ;
+                                      bool respectSilence = [call.arguments[@"respectSilence"]boolValue] ;
+                                      CMTime time = CMTimeMakeWithSeconds(milliseconds / 1000,NSEC_PER_SEC);
+                                      //                    NSLog(@"isLocal: %d %@", isLocal, call.arguments[@"isLocal"] );
+                                      //                    NSLog(@"volume: %f %@", volume, call.arguments[@"volume"] );
+                                      //                    NSLog(@"position: %f %@", milliseconds, call.arguments[@"positions"] );
+                                      [self play:playerId url:url isLocal:isLocal volume:volume time:time isNotification:respectSilence];
+                                  },
+                              @"pause":
+                                  ^{
+                                      //                    NSLog(@"pause");
+                                      [self pause:playerId];
+                                  },
+                              @"resume":
+                                  ^{
+                                      //                    NSLog(@"resume");
+                                      [self resume:playerId];
+                                  },
+                              @"stop":
+                                  ^{
+                                      //                    NSLog(@"stop");
+                                      [self stop:playerId];
+                                  },
+                              @"release":
+                                  ^{
+                                      //                        NSLog(@"release");
+                                      [self stop:playerId];
+                                  },
+                              @"seek":
+                                  ^{
+                                      //                    NSLog(@"seek");
+                                      if (!call.arguments[@"position"]) {
+                                          result(0);
+                                      } else {
+                                          int milliseconds = [call.arguments[@"position"] intValue];
+//                                          NSLog(@"Seeking to: %d milliseconds", milliseconds);
+                                          [self seek:playerId time:CMTimeMakeWithSeconds(milliseconds / 1000.0 ,NSEC_PER_SEC)];
+                                      }
+                                  },
+                              @"setUrl":
+                                  ^{
+                                      //                    NSLog(@"setUrl");
+                                      NSString *url = call.arguments[@"url"];
+                                      int isLocal = [call.arguments[@"isLocal"]intValue];
+                                      [ self setUrl:url
+                                            isLocal:isLocal
+                                           playerId:playerId
+                                            onReady:^(NSString * playerId) {
+                                                result(@(1));
+                                            }
+                                       ];
+                                  },
+                              @"setVolume":
+                                  ^{
+                                      //                    NSLog(@"setVolume");
+                                      float volume = (float)[call.arguments[@"volume"] doubleValue];
+                                      [self setVolume:volume playerId:playerId];
+                                  },
+                              @"setReleaseMode":
+                                  ^{
+                                      //                    NSLog(@"setReleaseMode");
+                                      NSString *releaseMode = call.arguments[@"releaseMode"];
+                                      bool looping = [releaseMode hasSuffix:@"LOOP"];
+                                      [self setLooping:looping playerId:playerId];
+                                  }
+                              };
+    
+    [ self initPlayerInfo:playerId ];
+    CaseBlock c = methods[call.method];
+    if (c) c(); else {
+        NSLog(@"not implemented");
+        result(FlutterMethodNotImplemented);
+    }
+    if(![call.method isEqualToString:@"setUrl"]) {
+        result(@(1));
+    }
 }
 
 -(void) initPlayerInfo: (NSString *) playerId {
-  NSMutableDictionary * playerInfo = players[playerId];
-  if (!playerInfo) {
-    players[playerId] = [@{@"isPlaying": @false, @"volume": @(1.0), @"looping": @(false)} mutableCopy];
-  }
+    NSMutableDictionary * playerInfo = players[playerId];
+    if (!playerInfo) {
+        players[playerId] = [@{@"isPlaying": @false, @"volume": @(1.0), @"looping": @(false)} mutableCopy];
+    }
 }
 
 -(void) setUrl: (NSString*) url
        isLocal: (bool) isLocal
-       playerId: (NSString*) playerId
+      playerId: (NSString*) playerId
        onReady:(VoidCallback)onReady
 {
-  NSMutableDictionary * playerInfo = players[playerId];
-  AVPlayer *player = playerInfo[@"player"];
-  NSMutableSet *observers = playerInfo[@"observers"];
-  AVPlayerItem *playerItem;
+    NSMutableDictionary * playerInfo = players[playerId];
+    AVPlayer *player = playerInfo[@"player"];
+    NSMutableSet *observers = playerInfo[@"observers"];
+    AVPlayerItem *playerItem;
     
-  NSLog(@"setUrl %@", url);
-//kv @ 20.06.2019 commented this out, should add some kind of force reload otherwise
-//assets with same name not played \(O_o)_
+    //  NSLog(@"setUrl %@", url);
+    //kv @ 20.06.2019 commented this out, should add some kind of force reload otherwise
+    //assets with same name not played \(O_o)_
     
-//  if (!playerInfo || ![url isEqualToString:playerInfo[@"url"]]) {
+    //  if (!playerInfo || ![url isEqualToString:playerInfo[@"url"]]) {
     if (isLocal) {
-      playerItem = [ [ AVPlayerItem alloc ] initWithURL:[ NSURL fileURLWithPath:url ]];
+        playerItem = [ [ AVPlayerItem alloc ] initWithURL:[ NSURL fileURLWithPath:url ]];
     } else {
-      playerItem = [ [ AVPlayerItem alloc ] initWithURL:[ NSURL URLWithString:url ]];
+        playerItem = [ [ AVPlayerItem alloc ] initWithURL:[ NSURL URLWithString:url ]];
     }
-      
+    
     if (playerInfo[@"url"]) {
-      [[player currentItem] removeObserver:self forKeyPath:@"player.currentItem.status" ];
-
-      [ playerInfo setObject:url forKey:@"url" ];
-
-      for (id ob in observers) {
-         [ [ NSNotificationCenter defaultCenter ] removeObserver:ob ];
-      }
-      [ observers removeAllObjects ];
-      [ player replaceCurrentItemWithPlayerItem: playerItem ];
+        [[player currentItem] removeObserver:self forKeyPath:@"player.currentItem.status" ];
+        
+        [ playerInfo setObject:url forKey:@"url" ];
+        
+        for (id ob in observers) {
+            [ [ NSNotificationCenter defaultCenter ] removeObserver:ob ];
+        }
+        [ observers removeAllObjects ];
+        [ player replaceCurrentItemWithPlayerItem: playerItem ];
     } else {
-      player = [[ AVPlayer alloc ] initWithPlayerItem: playerItem ];
-      observers = [[NSMutableSet alloc] init];
-
-      [ playerInfo setObject:player forKey:@"player" ];
-      [ playerInfo setObject:url forKey:@"url" ];
-      [ playerInfo setObject:observers forKey:@"observers" ];
-
-      // playerInfo = [@{@"player": player, @"url": url, @"isPlaying": @false, @"observers": observers, @"volume": @(1.0), @"looping": @(false)} mutableCopy];
-      // players[playerId] = playerInfo;
-
-      // stream player position
-      CMTime interval = CMTimeMakeWithSeconds(0.05, NSEC_PER_SEC);
-      id timeObserver = [ player  addPeriodicTimeObserverForInterval: interval queue: nil usingBlock:^(CMTime time){
-        [self onTimeInterval:playerId time:time];
-      }];
+        player = [[ AVPlayer alloc ] initWithPlayerItem: playerItem ];
+        observers = [[NSMutableSet alloc] init];
+        
+        [ playerInfo setObject:player forKey:@"player" ];
+        [ playerInfo setObject:url forKey:@"url" ];
+        [ playerInfo setObject:observers forKey:@"observers" ];
+        
+        // playerInfo = [@{@"player": player, @"url": url, @"isPlaying": @false, @"observers": observers, @"volume": @(1.0), @"looping": @(false)} mutableCopy];
+        // players[playerId] = playerInfo;
+        
+        // stream player position
+        CMTime interval = CMTimeMakeWithSeconds(0.05, NSEC_PER_SEC);
+        id timeObserver = [ player  addPeriodicTimeObserverForInterval: interval queue: nil usingBlock:^(CMTime time){
+            [self onTimeInterval:playerId time:time];
+        }];
         [timeobservers addObject:@{@"player":player, @"observer":timeObserver}];
     }
-      
+    
     id anobserver = [[ NSNotificationCenter defaultCenter ] addObserverForName: AVPlayerItemDidPlayToEndTimeNotification
                                                                         object: playerItem
                                                                          queue: nil
@@ -208,19 +208,19 @@ FlutterMethodChannel *_channel_audioplayer;
                                                                         [self onSoundComplete:playerId];
                                                                     }];
     [observers addObject:anobserver];
-      
+    
     // is sound ready
     [playerInfo setObject:onReady forKey:@"onReady"];
     [playerItem addObserver:self
-                          forKeyPath:@"player.currentItem.status"
-                          options:0
-                          context:(void*)playerId];
-      
-//  } else {
-//    if ([[player currentItem] status ] == AVPlayerItemStatusReadyToPlay) {
-//      onReady(playerId);
-//    }
-//  }
+                 forKeyPath:@"player.currentItem.status"
+                    options:0
+                    context:(void*)playerId];
+    
+    //  } else {
+    //    if ([[player currentItem] status ] == AVPlayerItemStatusReadyToPlay) {
+    //      onReady(playerId);
+    //    }
+    //  }
 }
 
 -(void) play: (NSString*) playerId
@@ -228,7 +228,7 @@ FlutterMethodChannel *_channel_audioplayer;
      isLocal: (int) isLocal
       volume: (float) volume
         time: (CMTime) time
-      isNotification: (bool) respectSilence
+isNotification: (bool) respectSilence
 {
     NSError *error = nil;
     AVAudioSessionCategory category;
@@ -240,37 +240,37 @@ FlutterMethodChannel *_channel_audioplayer;
     BOOL success = [[AVAudioSession sharedInstance]
                     setCategory: category
                     error:&error];
-  if (!success) {
-    NSLog(@"Error setting speaker: %@", error);
-  }
-  [[AVAudioSession sharedInstance] setActive:YES error:&error];
-
-  [ self setUrl:url 
-         isLocal:isLocal 
-         playerId:playerId 
-         onReady:^(NSString * playerId) {
-           NSMutableDictionary * playerInfo = players[playerId];
-           AVPlayer *player = playerInfo[@"player"];
-           [ player setVolume:volume ];
-           [ player seekToTime:time ];
-           [ player play];
-           [ playerInfo setObject:@true forKey:@"isPlaying" ];
-         }    
-  ];
+    if (!success) {
+        NSLog(@"Error setting speaker: %@", error);
+    }
+    [[AVAudioSession sharedInstance] setActive:YES error:&error];
+    
+    [ self setUrl:url
+          isLocal:isLocal
+         playerId:playerId
+          onReady:^(NSString * playerId) {
+              NSMutableDictionary * playerInfo = players[playerId];
+              AVPlayer *player = playerInfo[@"player"];
+              [ player setVolume:volume ];
+              [ player seekToTime:time ];
+              [ player play];
+              [ playerInfo setObject:@true forKey:@"isPlaying" ];
+          }
+     ];
 }
 
 -(void) updateDuration: (NSString *) playerId
 {
-  NSMutableDictionary * playerInfo = players[playerId];
-  AVPlayer *player = playerInfo[@"player"];
-
-  CMTime duration = [[[player currentItem]  asset] duration];
-  NSLog(@"ios -> updateDuration...%f", CMTimeGetSeconds(duration));
-  if(CMTimeGetSeconds(duration)>0){
-    NSLog(@"ios -> invokechannel");
-   int mseconds= CMTimeGetSeconds(duration)*1000;
-    [_channel_audioplayer invokeMethod:@"audio.onDuration" arguments:@{@"playerId": playerId, @"value": @(mseconds)}];
-  }
+    NSMutableDictionary * playerInfo = players[playerId];
+    AVPlayer *player = playerInfo[@"player"];
+    
+    CMTime duration = [[[player currentItem]  asset] duration];
+    //  NSLog(@"ios -> updateDuration...%f", CMTimeGetSeconds(duration));
+    if(CMTimeGetSeconds(duration)>0){
+        //    NSLog(@"ios -> invokechannel");
+        int mseconds= CMTimeGetSeconds(duration)*1000;
+        [_channel_audioplayer invokeMethod:@"audio.onDuration" arguments:@{@"playerId": playerId, @"value": @(mseconds)}];
+    }
 }
 
 // No need to spam the logs with every time interval update
@@ -284,113 +284,118 @@ FlutterMethodChannel *_channel_audioplayer;
 }
 
 -(void) pause: (NSString *) playerId {
-  NSMutableDictionary * playerInfo = players[playerId];
-  AVPlayer *player = playerInfo[@"player"];
-
-  [ player pause ];
-  [playerInfo setObject:@false forKey:@"isPlaying"];
+    NSMutableDictionary * playerInfo = players[playerId];
+    AVPlayer *player = playerInfo[@"player"];
+    
+    [ player pause ];
+    [playerInfo setObject:@false forKey:@"isPlaying"];
 }
 
 -(void) resume: (NSString *) playerId {
-  NSMutableDictionary * playerInfo = players[playerId];
-  AVPlayer *player = playerInfo[@"player"];
-  [player play];
-  [playerInfo setObject:@true forKey:@"isPlaying"];
+    NSMutableDictionary * playerInfo = players[playerId];
+    AVPlayer *player = playerInfo[@"player"];
+    [player play];
+    [playerInfo setObject:@true forKey:@"isPlaying"];
 }
 
 -(void) setVolume: (float) volume 
-        playerId:  (NSString *) playerId {
-  NSMutableDictionary *playerInfo = players[playerId];
-  AVPlayer *player = playerInfo[@"player"];
-  playerInfo[@"volume"] = @(volume);
-  [ player setVolume:volume ];
+         playerId:  (NSString *) playerId {
+    NSMutableDictionary *playerInfo = players[playerId];
+    AVPlayer *player = playerInfo[@"player"];
+    playerInfo[@"volume"] = @(volume);
+    [ player setVolume:volume ];
 }
 
 -(void) setLooping: (bool) looping
-        playerId:  (NSString *) playerId {
-  NSMutableDictionary *playerInfo = players[playerId];
-  [playerInfo setObject:@(looping) forKey:@"looping"];
+          playerId:  (NSString *) playerId {
+    NSMutableDictionary *playerInfo = players[playerId];
+    [playerInfo setObject:@(looping) forKey:@"looping"];
 }
 
 -(void) stop: (NSString *) playerId {
-  NSMutableDictionary * playerInfo = players[playerId];
-
-  if ([playerInfo[@"isPlaying"] boolValue]) {
-    [ self pause:playerId ];
-    [ self seek:playerId time:CMTimeMake(0, 1) ];
-    [playerInfo setObject:@false forKey:@"isPlaying"];
-  }
+    NSMutableDictionary * playerInfo = players[playerId];
+    
+    if ([playerInfo[@"isPlaying"] boolValue]) {
+        [ self pause:playerId ];
+        [ self seek:playerId time:CMTimeMake(0, 1000) ];
+        [playerInfo setObject:@false forKey:@"isPlaying"];
+    }
 }
 
 -(void) seek: (NSString *) playerId
         time: (CMTime) time {
-  NSMutableDictionary * playerInfo = players[playerId];
-  AVPlayer *player = playerInfo[@"player"];
-  [[player currentItem] seekToTime:time];
+    NSMutableDictionary * playerInfo = players[playerId];
+    AVPlayer *player = playerInfo[@"player"];
+    
+//    NSLog(@"22 Seeking to: %f milliseconds", CMTimeGetSeconds(time));
+    
+    [[player currentItem] seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
 }
 
 -(void) onSoundComplete: (NSString *) playerId {
-  NSLog(@"ios -> onSoundComplete...");
-  NSMutableDictionary * playerInfo = players[playerId];
-
-  if (![playerInfo[@"isPlaying"] boolValue]) {
-    return;
-  }
-
-  [ self pause:playerId ];
-  [ self seek:playerId time:CMTimeMakeWithSeconds(0,1) ];
-
-  if ([ playerInfo[@"looping"] boolValue]) {
-    [ self resume:playerId ];
-  }
-
-  [ _channel_audioplayer invokeMethod:@"audio.onComplete" arguments:@{@"playerId": playerId}];
+    //  NSLog(@"ios -> onSoundComplete...");
+    NSMutableDictionary * playerInfo = players[playerId];
+    
+    if (![playerInfo[@"isPlaying"] boolValue]) {
+        return;
+    }
+    
+    
+    //kv added to fix seek bug on 4th sample
+//    [self pause:playerId];
+    
+    if ([ playerInfo[@"looping"] boolValue]) {
+      [self seek:playerId time:CMTimeMakeWithSeconds(0, 1000)];
+      [self resume:playerId ];
+    }
+    
+    [ _channel_audioplayer invokeMethod:@"audio.onComplete" arguments:@{@"playerId": playerId}];
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath
                      ofObject:(id)object
                        change:(NSDictionary *)change
                       context:(void *)context {
-  if ([keyPath isEqualToString: @"player.currentItem.status"]) {
-    NSString *playerId = (__bridge NSString*)context;
-    NSMutableDictionary * playerInfo = players[playerId];
-    AVPlayer *player = playerInfo[@"player"];
-
-    NSLog(@"player status: %ld",(long)[[player currentItem] status ]);
-
-    // Do something with the status…
-    if ([[player currentItem] status ] == AVPlayerItemStatusReadyToPlay) {
-      [self updateDuration:playerId];
-
-      VoidCallback onReady = playerInfo[@"onReady"];
-      if (onReady != nil) {
-        [playerInfo removeObjectForKey:@"onReady"];  
-        onReady(playerId);
-      }
-    } else if ([[player currentItem] status ] == AVPlayerItemStatusFailed) {
-      [_channel_audioplayer invokeMethod:@"audio.onError" arguments:@{@"playerId": playerId, @"value": @"AVPlayerItemStatus.failed"}];
+    if ([keyPath isEqualToString: @"player.currentItem.status"]) {
+        NSString *playerId = (__bridge NSString*)context;
+        NSMutableDictionary * playerInfo = players[playerId];
+        AVPlayer *player = playerInfo[@"player"];
+        
+        //    NSLog(@"player status: %ld",(long)[[player currentItem] status ]);
+        
+        // Do something with the status…
+        if ([[player currentItem] status ] == AVPlayerItemStatusReadyToPlay) {
+            [self updateDuration:playerId];
+            
+            VoidCallback onReady = playerInfo[@"onReady"];
+            if (onReady != nil) {
+                [playerInfo removeObjectForKey:@"onReady"];
+                onReady(playerId);
+            }
+        } else if ([[player currentItem] status ] == AVPlayerItemStatusFailed) {
+            [_channel_audioplayer invokeMethod:@"audio.onError" arguments:@{@"playerId": playerId, @"value": @"AVPlayerItemStatus.failed"}];
+        }
+    } else {
+        // Any unrecognized context must belong to super
+        [super observeValueForKeyPath:keyPath
+                             ofObject:object
+                               change:change
+                              context:context];
     }
-  } else {
-    // Any unrecognized context must belong to super
-    [super observeValueForKeyPath:keyPath
-                         ofObject:object
-                           change:change
-                          context:context];
-  }
 }
 
 - (void)dealloc {
-  for (id value in timeobservers)
-    [value[@"player"] removeTimeObserver:value[@"observer"]];
-  timeobservers = nil;
-
-  for (NSString* playerId in players) {
-      NSMutableDictionary * playerInfo = players[playerId];
-      NSMutableSet * observers = playerInfo[@"observers"];
-      for (id ob in observers)
-        [[NSNotificationCenter defaultCenter] removeObserver:ob];
-  }
-  players = nil;
+    for (id value in timeobservers)
+        [value[@"player"] removeTimeObserver:value[@"observer"]];
+    timeobservers = nil;
+    
+    for (NSString* playerId in players) {
+        NSMutableDictionary * playerInfo = players[playerId];
+        NSMutableSet * observers = playerInfo[@"observers"];
+        for (id ob in observers)
+            [[NSNotificationCenter defaultCenter] removeObserver:ob];
+    }
+    players = nil;
 }
 
 
