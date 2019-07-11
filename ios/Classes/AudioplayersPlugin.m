@@ -388,7 +388,6 @@ isNotification: (bool) respectSilence
                      ofObject:(id)object
                        change:(NSDictionary *)change
                       context:(void *)context {
-
   if ([keyPath isEqualToString: @"player.currentItem.status"]) {
     NSString *playerId = (__bridge NSString*)context;
     NSMutableDictionary * playerInfo = players[playerId];
@@ -408,6 +407,13 @@ isNotification: (bool) respectSilence
     } else if ([[player currentItem] status ] == AVPlayerItemStatusFailed) {
       [_channel_audioplayer invokeMethod:@"audio.onError" arguments:@{@"playerId": playerId, @"value": @"AVPlayerItemStatus.failed"}];
     }
+  } else {
+    // Any unrecognized context must belong to super
+    [super observeValueForKeyPath:keyPath
+                         ofObject:object
+                           change:change
+                          context:context];
+  }
 }
 
 - (void)dealloc {
