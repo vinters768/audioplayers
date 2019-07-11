@@ -10,12 +10,18 @@ This was orginally forked from [rxlabz's audioplayer](https://github.com/rxlabz/
 
 ```yaml
 dependencies:
-  audioplayers: ^0.11.0
+  audioplayers: ^0.13.1
 ```
 
 ## Discord channel
 
 We have created a channel for audioplayers help on Fireslime's discord, join it [here](https://discord.gg/ny7eThk)
+
+## Support us
+
+You can support us by becoming a patron on Patreon, any support is much appreciated.
+
+[![Patreon](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/fireslime)
 
 ## Troubshooting
 
@@ -26,13 +32,13 @@ Before opening an issue, please refer to the [troubleshoot guide](troubleshootin
 An `AudioPlayer` instance can play a single audio at a time. To create it, simply call the constructor:
 
 ```dart
-    AudioPlayer audioPlayer = new AudioPlayer();
+    AudioPlayer audioPlayer = AudioPlayer();
 ```
 
 To use the low latency API, better for gaming sounds, use:
 
 ```dart
-    AudioPlayer audioPlayer = new AudioPlayer(mode: PlayerMode.LOW_LATENCY);
+    AudioPlayer audioPlayer = AudioPlayer(mode: PlayerMode.LOW_LATENCY);
 ```
 
 In this mode the backend won't fire any duration or position updates.
@@ -62,6 +68,10 @@ Both for Remote Files or Local Files, use the `play` method, just setting approp
 For Local Assets, you have to use the `AudioCache` class (see below).
 
 To play a Remote File, just call `play` with the url (the `isLocal` parameter is false by default):
+
+If you want to play audio for a long period of time, you need to set appropriately the flag `stayAwake`,
+If you pass `setAwake` as true you need to add this permission to your app manifest: 
+`<uses-permission android:name="android.permission.WAKE_LOCK" />`.
 
 ```dart
   play() async {
@@ -105,7 +115,7 @@ Stop will stop the audio and reset the cursor. Subsequently calling play will re
 Finally, use seek to jump through your audio:
 
 ```dart
-  int result = await audioPlayer.seek(new Duration(milliseconds: 1200));
+  int result = await audioPlayer.seek(Duration(milliseconds: 1200));
 ```
 
 Also, you can resume (like play, but without new parameters):
@@ -204,8 +214,8 @@ This is called when an unexpected error is thrown in the native code.
     print('audioPlayer error : $msg');
     setState(() {
       playerState = PlayerState.stopped;
-      duration = new Duration(seconds: 0);
-      position = new Duration(seconds: 0);
+      duration = Duration(seconds: 0);
+      position = Duration(seconds: 0);
     });
   });
 ```
@@ -216,7 +226,7 @@ In order to play Local Assets, you must use the `AudioCache` class.
 
 Flutter does not provide an easy way to play audio on your assets, but this class helps a lot. It actually copies the asset to a temporary folder in the device, where it is then played as a Local File.
 
-It works as a cache because it keep track of the copied files so that you can replay then without delay.
+It works as a cache because it keeps track of the copied files so that you can replay them without delay.
 
 You can find the full documentation for this class [here](doc/audio_cache.md).
 

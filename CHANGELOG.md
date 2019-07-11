@@ -1,5 +1,23 @@
 # Changelog
 
+## audioplayers 0.13.1
+ - Added stayAwake feature (thanks, @danielR2001)
+ - Improved dispose method (thanks, @hugocbpassos)
+ - Added getCurrentPosition (thanks, @hariom08)
+ - Some bug fixes and small changes
+
+## audioplayers 0.13.0
+ - Call onDurationChanged after setUrl() to be consistent with ios version (thanks @subhash279)
+ - Adding getDuration feature iOS/Android (thanks @alecorsino)
+
+## audioplayers 0.12.1
+ - Fixes bug where the stream handlers were not called due to exception on the handler
+ - Proper error message when errors in the dart handler occurs
+
+## audioplayers 0.12.0
+ - Update to path_provider 1.1.0
+ - Upgrade to Swift 5 in example project setting (thanks @jerryzhoujw)
+
 ## audioplayers 0.11.0
 - **Breaking change**. Migrate from the deprecated original Android Support
   Library to AndroidX. This shouldn't result in any functional changes, but it
